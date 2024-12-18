@@ -44,11 +44,37 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 */
 
 $router->get('/', 'Auth');
-$router->get('/home', 'Home');
+
 $router->group('/auth', function() use ($router){
     $router->match('/register', 'Auth::register', ['POST', 'GET']);
     $router->match('/login', 'Auth::login', ['POST', 'GET']);
     $router->get('/logout', 'Auth::logout');
     $router->match('/password-reset', 'Auth::password_reset', ['POST', 'GET']);
     $router->match('/set-new-password', 'Auth::set_new_password', ['POST', 'GET']);
+});
+
+$router->group('/organizer', function() use ($router){
+    $router->match('/dashboard', 'Organizer::dashboard', ['POST', 'GET']);
+    $router->match('/create', 'Organizer::create', ['POST', 'GET']);
+    $router->match('/update/{event_id}', 'Organizer::update', ['POST', 'GET']);
+    $router->match('/delete/{event_id}', 'Organizer::delete', ['POST', 'GET']);
+    $router->get('/details/{event_id}', 'Organizer::view_details', ['POST', 'GET']);
+    $router->get('/manage_booking', 'Organizer::bookings');
+    $router->post('/reject_booking/{booking_id}', 'Organizer::reject_booking');
+    $router->post('/approve_booking/{booking_id}', 'Organizer::approve_booking');
+});
+
+$router->group('/user', function() use ($router) {
+    $router->get('/home', 'User::home');
+    $router->get('/about', 'User::about');
+    $router->match('/browse', 'User::browse', ['POST', 'GET']);
+    $router->match('/create_booking/{event_id}', 'User::create_booking', ['POST', 'GET']);
+    $router->get('/dates/{event_id}', 'User::get_event_dates');
+});
+
+$router->group('/admin', function() use ($router){
+    $router->get('/dashboard', 'Admin::dashboard');
+    $router->post('/approve/{event_id}', 'Admin::approve');
+    $router->post('/reject/{event_id}', 'Admin::reject');
+    $router->post('/delete/{event_id}', 'Admin::delete');
 });

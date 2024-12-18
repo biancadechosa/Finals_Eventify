@@ -8,7 +8,7 @@ class Auth extends Controller {
         parent::__construct();
         if(segment(2) != 'logout') {
             if(logged_in()) {
-                redirect('home');
+                redirect('/user/home');
             }
         }
         $this->call->library('email');
@@ -83,9 +83,9 @@ class Auth extends Controller {
 		$replace = array($token, base_url());
 		$template = str_replace($search, $replace, $template);
 		$this->email->recipient($email);
-		$this->email->subject('LavaLust Reset Password'); //change based on subject
-		$this->email->sender('sample@email.com'); //change based on sender email
-		$this->email->reply_to('sample@email.com'); // change based on sender email
+		$this->email->subject('Eventify Reset Password'); //change based on subject
+		$this->email->sender('eventify@email.com'); //change based on sender email
+		$this->email->reply_to('eventify@email.com'); // change based on sender email
 		$this->email->email_content($template, 'html');
 		$this->email->send();
 	}
