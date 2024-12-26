@@ -3,10 +3,30 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 class Organizer extends Controller {
 
+    protected $pdo;
     public function __construct()
     {
         parent::__construct();
         $this->call->model('Organizer_model');
+
+        $host = 'localhost';
+        $db = 'eventify';
+        $user = 'root';
+        $pass = '';
+        $charset = 'utf8mb4';
+
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+
+        try {
+            $this->pdo = new PDO($dsn, $user, $pass, $options);
+        } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+        }
     }
 
     public function dashboard() {
@@ -132,6 +152,64 @@ class Organizer extends Controller {
         $data['bookings'] = $bookings; // Pass bookings to the view
         $this->call->view('organizer/manage_booking', $data);
     }
+    
+    // Inside your EventController.php or BookingController.php or OrganizerController.php
+
+    public function manageBooking() {
+        // Query to fetch all bookings (no event_id required)
+        $query = "
+            SELECT 
+                b.booking_id,
+                e.title AS event_title,
+                u.email AS user_email,
+                b.booking_date,
+                b.ticket_quantity,
+                b.ticket_number,
+                b.reminder_set,
+                b.reminder_date,
+                b.status
+            FROM bookings b
+            INNER JOIN event e ON b.event_id = e.event_id
+            INNER JOIN users u ON b.user_id = u.id";
+    
+        // Prepare the query and execute
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+    
+        // Fetch the results and store in a variable
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Return the data to the view
+        $this->call->view('organizer/manage_booking', ['bookings' => $bookings]);
+    }
+    public function approve_booking()
+{
+    $booking_id = $this->io->post('booking_id');
+    $status = 'approved'; // Status to set
+
+    $this->Organizer_model->update_booking($booking_id, $status);
+        $_SESSION['success'] = 'Booking successfully approved!';
+        header('Location: organizer/manage_booking.php');
+    redirect('/organizer/manage_booking');
+}
+
+
+public function reject_booking()
+{
+    $booking_id = $this->io->post('booking_id');
+    $status = 'rejected'; // Status to set
+
+    if ($this->Organizer_model->update_booking($booking_id, $status)){
+         flash_alert('Booking rejected', 'success');
+            redirect('/organizer/manage_booking');
+        } else {
+            flash_alert('Failed to reject booking, please try again.', 'error');
+            redirect('/organizer/manage_booking');
+        }
+    redirect('/organizer/manage_booking');
+}
+
+
     
 }
 ?>

@@ -51,6 +51,7 @@
             font-size: 0.9rem;
             color: #555555;
         }
+
         .sidebar {
             height: 100%;
             width: 250px;
@@ -133,6 +134,61 @@
             opacity: 0;
         }
 
+        .status-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 15px;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+}
+
+.status-approved {
+    background-color: #28a745; /* Green */
+}
+
+.status-pending {
+    background-color: #ffc107; /* Yellow */
+}
+
+.status-rejected {
+    background-color: #dc3545; /* Red */
+}
+
+/* Button Styles */
+button {
+    padding: 0.3rem 1.2rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Approve Button */
+.approve-btn {
+    background-color: #28a745; /* Green */
+}
+
+.approve-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Reject Button */
+.reject-btn {
+    background-color: #dc3545; /* Red */
+}
+
+.reject-btn:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Optional: Add padding to the form so buttons are spaced out */
+form {
+    margin-right: 10px;
+}
+
+
     </style>
 </head>
 <body>
@@ -147,58 +203,169 @@
 </div>
     <div class="container">
         <h1 class="text-center mb-4">Organizer Dashboard</h1>
+
+        <!-- Pending Bookings -->
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Upcoming Bookings</h5>
-                <table class="table table-striped table-hover">
+                <h5 class="card-title">Pending Bookings</h5>
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Booking ID</th>
-                            <th>Event Title</th>
+                            <th>Event</th>
                             <th>User Email</th>
                             <th>Booking Date</th>
-                            <th>Number of Tickets</th>
+                            <th>Ticket Quantity</th>
                             <th>Ticket Number</th>
-                            <th>Reminder Set</th> <!-- New column -->
-                            <th>Reminder Date</th> <!-- New column -->
+                            <th>Reminder Set</th>
+                            <th>Reminder Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-    <?php foreach ($bookings as $booking) : ?>
-        <tr>
-        <td><?= htmlspecialchars($booking['booking_id'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['event_title'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['user_email'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['booking_date'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['ticket_quantity'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['ticket_number'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['reminder_set'] ?? 'N/A'); ?></td>
-        <td><?= htmlspecialchars($booking['reminder_date'] ?? 'N/A'); ?></td>
-            <td>
-                <a href="<?= site_url('/organizer/approve_booking/' . $booking['booking_id']); ?>" class="btn btn-sm btn-primary">Approve</a>
-                <a href="<?= site_url('/organizer/reject_booking/' . $booking['booking_id']); ?>" class="btn btn-sm btn-danger">Delete</a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+                        <?php foreach ($bookings as $booking) : ?>
+                            <?php if ($booking['status'] == 'pending'): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($booking['booking_id'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['event_title'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['user_email'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['booking_date'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_quantity'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_number'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_set'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_date'] ?? 'N/A'); ?></td>
+                                <td>
+                                    <!-- Approve Booking Form -->
+<form method="post" action="<?= site_url('/organizer/approve_booking/'.$booking['booking_id']); ?>" style="display:inline-block;" onsubmit="return confirmApprove();">
+    <input type="hidden" name="booking_id" value="<?= $booking['booking_id']; ?>">
+    <button type="submit" class="approve-btn">Approve</button>
+</form>
 
+<!-- Reject Booking Form -->
+<form method="post" action="<?= site_url('/organizer/reject_booking/'.$booking['booking_id']); ?>" style="display:inline-block;" onsubmit="return confirmDelete();">
+    <input type="hidden" name="booking_id" value="<?= $booking['booking_id']; ?>">
+    <button type="submit" class="reject-btn">Reject</button>
+</form>
+
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Approved Bookings -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Approved Bookings</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Event</th>
+                            <th>User Email</th>
+                            <th>Booking Date</th>
+                            <th>Ticket Quantity</th>
+                            <th>Ticket Number</th>
+                            <th>Reminder Set</th>
+                            <th>Reminder Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($bookings as $booking) : ?>
+                            <?php if ($booking['status'] == 'approved'): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($booking['booking_id'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['event_title'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['user_email'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['booking_date'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_quantity'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_number'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_set'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_date'] ?? 'N/A'); ?></td>
+                               <!-- For Approved Status -->
+                               <td>
+    <span class="status-badge status-<?= strtolower($booking['status']); ?>">
+        <?= $booking['status']; ?>
+    </span>
+</td>
+
+                            </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rejected Bookings -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Rejected Bookings</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Event</th>
+                            <th>User Email</th>
+                            <th>Booking Date</th>
+                            <th>Ticket Quantity</th>
+                            <th>Ticket Number</th>
+                            <th>Reminder Set</th>
+                            <th>Reminder Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($bookings as $booking) : ?>
+                            <?php if ($booking['status'] == 'rejected'): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($booking['booking_id'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['event_title'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['user_email'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['booking_date'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_quantity'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_number'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_set'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_date'] ?? 'N/A'); ?></td>
+                                <td>
+    <span class="status-badge status-<?= strtolower($booking['status']); ?>">
+        <?= $booking['status']; ?>
+    </span>
+</td>
+
+                            </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <footer>&copy; 2024 Eventify. All rights reserved.</footer>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <footer>
+        <p>&copy; <?= date('Y'); ?> Your Organization. All rights reserved.</p>
+    </footer>
 
     <script>
-        const hamburger = document.getElementById('hamburger');
-        const sidebar = document.getElementById('sidebar');
+        // Hamburger menu toggle
+        const hamburger = document.getElementById("hamburger");
+        const sidebar = document.getElementById("sidebar");
 
-        hamburger.addEventListener('click', () => {
-            sidebar.classList.toggle('visible');
+        hamburger.addEventListener("click", () => {
+            sidebar.classList.toggle("visible");
         });
+
+        function confirmDelete() {
+            return confirm('Are you sure you want to reject this booking?');
+        }
+        function confirmApprove() {
+            return confirm('Approve this booking?');
+        }
     </script>
 </body>
 </html>
