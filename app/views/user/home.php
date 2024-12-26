@@ -1,7 +1,4 @@
-
-<?php
-include APP_DIR.'views/templates/header.php';
-?>
+<?php include APP_DIR.'views/templates/header.php'; ?>
 <body>
     <div id="app">
         <div class="container">
@@ -12,8 +9,7 @@ include APP_DIR.'views/templates/header.php';
                 <nav>
                     <a href="#" id="home-link">Home</a>
                     <a href="/user/about" id="about-link">About</a>
-                    <a href="/user/browse" id="browse-link">Browse Events</a>
-                    <a href="#" id="contact-link">Contact</a>
+                    <a href="/user/contact" id="contact-link">Contact</a>
                 </nav>
             </header>
 
@@ -22,34 +18,31 @@ include APP_DIR.'views/templates/header.php';
                 <p>Discover exciting events based on your location and interests, and book them instantly with Eventify.</p>
             </section>
 
+            <!-- Search Bar Section -->
+            <section class="search-bar">
+                <input type="text" id="event-search" placeholder="Search events...">
+            </section>
+
             <section class="events-section">
                 <h2>Upcoming Events</h2>
                 <div id="events-container">
-                <?php if (!empty($event)): ?>
-    <?php foreach ($event as $event): ?>
-        <?php if ($event['status'] !== 'Pending' && $event['status'] !== 'rejected'): // Filter by status ?>
-            <div class="event-card">
-                <h3><a href="/user/event/<?= htmlspecialchars($event['event_id']); ?>"><?= htmlspecialchars($event['title']); ?></a></h3>
-                <p><?= htmlspecialchars($event['description']); ?></p>
-                <p><strong>Location:</strong> <?= htmlspecialchars($event['location']); ?></p>
-                <p><strong>Date:</strong> <?= htmlspecialchars($event['start_date']); ?> to <?= htmlspecialchars($event['end_date']); ?></p>
-                <p><strong>Price Range:</strong> <?= htmlspecialchars($event['ticket_price']); ?></p>
-                <p><strong>Popularity:</strong> <?= htmlspecialchars($event['popularity']); ?></p>
-                <p><strong>Ratings:</strong>
-                    <input type="hidden" name="event_id" value="<?= htmlspecialchars($event['event_id']); ?>">
-                    <span class="stars">
-                        <?= str_repeat('★', $event['ratings']) . str_repeat('☆', 5 - $event['ratings']); ?>
-                    </span>
-                </p>
-                <p><strong>Type:</strong> <?= htmlspecialchars($event['type']); ?></p>
-                <a class="book-now-btn" role="button" href="<?= site_url('/user/create_booking/' . $event['event_id']); ?>" data-event_id="<?= $event['event_id']; ?>">Book Now</a>
-            </div>
-        <?php endif; ?>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>No events found.</p>
-<?php endif; ?>
-
+                    <?php if (!empty($event)): ?>
+                        <?php foreach ($event as $event): ?>
+                            <?php if ($event['status'] !== 'Pending' && $event['status'] !== 'rejected'): // Filter by status ?>
+                                <div class="event-card" data-title="<?= htmlspecialchars($event['title']); ?>" data-description="<?= htmlspecialchars($event['description']); ?>">
+                                    <h3><a href="/user/event/<?= htmlspecialchars($event['event_id']); ?>"><?= htmlspecialchars($event['title']); ?></a></h3>
+                                    <p><?= htmlspecialchars($event['description']); ?></p>
+                                    <p><strong>Location:</strong> <?= htmlspecialchars($event['location']); ?></p>
+                                    <p><strong>Date:</strong> <?= htmlspecialchars($event['start_date']); ?> to <?= htmlspecialchars($event['end_date']); ?></p>
+                                    <p><strong>Price Range:</strong> <?= htmlspecialchars($event['ticket_price']); ?></p>
+                                    <p><strong>Type:</strong> <?= htmlspecialchars($event['type']); ?></p>
+                                    <a class="book-now-btn" href="<?= site_url('/user/create_booking/' . $event['event_id']); ?>">Book Now</a>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No events found.</p>
+                    <?php endif; ?>
                 </div>
             </section>
         </div>
@@ -166,6 +159,20 @@ include APP_DIR.'views/templates/header.php';
             padding: 0 15px;
         }
 
+        .search-bar {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #event-search {
+            width: 80%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2em;
@@ -185,6 +192,30 @@ include APP_DIR.'views/templates/header.php';
             
         }
     </style>
-    
+
+    <!-- Add jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Event listener for the search input field
+            $('#event-search').on('keyup', function() {
+                var query = $(this).val().toLowerCase(); // Get the search query
+
+                // Loop through each event card and check if the title or description contains the query
+                $('.event-card').each(function() {
+                    var title = $(this).data('title').toLowerCase();
+                    var description = $(this).data('description').toLowerCase();
+
+                    // Show or hide the event card based on the search query
+                    if (title.indexOf(query) !== -1 || description.indexOf(query) !== -1) {
+                        $(this).show(); // Show the card if it matches
+                    } else {
+                        $(this).hide(); // Hide the card if it doesn't match
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

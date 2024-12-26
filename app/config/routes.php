@@ -59,7 +59,7 @@ $router->group('/organizer', function() use ($router){
     $router->match('/update/{event_id}', 'Organizer::update', ['POST', 'GET']);
     $router->match('/delete/{event_id}', 'Organizer::delete', ['POST', 'GET']);
     $router->get('/details/{event_id}', 'Organizer::view_details', ['POST', 'GET']);
-    $router->get('/manage_booking', 'Organizer::bookings');
+    $router->match('/manage_booking', 'Organizer::manageBooking', ['POST', 'GET']);
     $router->post('/reject_booking/{booking_id}', 'Organizer::reject_booking');
     $router->post('/approve_booking/{booking_id}', 'Organizer::approve_booking');
 });
@@ -67,7 +67,7 @@ $router->group('/organizer', function() use ($router){
 $router->group('/user', function() use ($router) {
     $router->get('/home', 'User::home');
     $router->get('/about', 'User::about');
-    $router->match('/browse', 'User::browse', ['POST', 'GET']);
+    $router->get('/contact', 'User::contact');
     $router->match('/create_booking/{event_id}', 'User::create_booking', ['POST', 'GET']);
     $router->get('/dates/{event_id}', 'User::get_event_dates');
 });

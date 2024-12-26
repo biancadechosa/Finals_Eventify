@@ -17,8 +17,8 @@ class User extends Controller {
         $this->call->view('user/about');
     }
 
-    public function browse() {
-        $this->call->view('user/browse');
+    public function contact() {
+        $this->call->view('user/contact');
     }
 
     public function create_booking($event_id) {

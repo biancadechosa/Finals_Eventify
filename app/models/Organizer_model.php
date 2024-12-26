@@ -56,18 +56,17 @@ class Organizer_model extends Model {
     public function delete_event($id) {
         return $this->db->table('event')->where('event_id', $id)->delete();
     }
-
-    public function get_all_bookings() {
-        return $this->db->table('bookings AS b')
-            ->select('b.booking_id', 'b.booking_date', 'b.ticket_quantity', 'b.ticket_number', 'b.reminder_set', 'b.reminder_date', 
-                     'e.title AS event_title', 'u.email AS user_email')
-            ->left_join('users AS u', 'b.user_id = u.id')
-            ->left_join('event AS e', 'b.event_id = e.event_id')
-            ->order_by('b.booking_date', 'desc')
-            ->get();
+    
+    public function update_booking($booking_id, $status)
+    {
+        $this->db->table('bookings')->where('booking_id', $booking_id)->update(['status' => $status]);
     }
     
-    
-    
+
+    public function reject_booking($booking_id)
+{
+    $this->db->table('bookings')->where('booking_id', $booking_id)->update(['status' => $status]);
+}
+
 }
 ?>
