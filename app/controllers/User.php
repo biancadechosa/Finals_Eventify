@@ -72,5 +72,73 @@ class User extends Controller {
         }
         $this->call->view('user/bookings', ['event' => $event]);
     }
+
+    // New function to handle organizer applications
+    public function Apply() {
+        // Check if the form is submitted
+        if ($this->form_validation->submitted()) {
+            // Gather all form inputs
+            $name = $this->io->post('name');
+            $email = $this->io->post('email');
+            $phone = $this->io->post('phone');
+            $experience = $this->io->post('experience');
+            $event_type = $this->io->post('event_type');
+    
+            // Handle file upload
+            $picture = $this->handleFileUpload();
+    
+            // Run form validation
+            if ($this->form_validation->run()) {
+                // Apply the user data to the model
+                $application_successful = $this->User_model->apply($name, $email, $phone, $experience, $event_type, $picture);
+    
+                // Check if the application was successful
+                if ($application_successful) {
+                    flash_alert('Application submitted successfully!', 'success');
+                    redirect('/user/home');
+                } else {
+                    flash_alert('Failed to submit application.', 'error');
+                    redirect('/user/apply_as_organizer');
+                }
+            } else {
+                // Form validation failed
+                flash_alert($this->form_validation->errors(), 'error');
+                redirect('/user/apply_as_organizer');
+            }
+        } else {
+            // Show the apply form if not submitted
+            $this->call->view('user/apply');
+        }
+    }
+    
+    /**
+     * Handle file upload for the user picture.
+     * @return string|null The file path of the uploaded picture or null if no file was uploaded.
+     */
+    private function handleFileUpload() {
+        $upload_dir = '/public/uploads/';
+        $picture = null;
+    
+        if (!empty($_FILES['picture']['name'])) {
+            $file_name = time() . '_' . $_FILES['picture']['name'];
+            $file_path = $upload_dir . $file_name;
+    
+            // Create upload directory if it doesn't exist
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+    
+            // Move uploaded file to the designated directory
+            if (move_uploaded_file($_FILES['picture']['tmp_name'], $file_path)) {
+                $picture = $file_path;
+            } else {
+                flash_alert('Failed to upload picture.', 'error');
+                redirect('/user/apply_as_organizer');
+            }
+        }
+    
+        return $picture;
+    }
+    
 }
 ?>

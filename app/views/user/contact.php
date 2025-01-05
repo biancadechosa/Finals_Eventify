@@ -50,7 +50,6 @@ include APP_DIR.'views/templates/header.php';
             <section class="contact-map">
                 <h2>Find Us Here</h2>
                 <div class="map-container">
-                    <!-- Placeholder map, replace with actual embed code if needed -->
                     <iframe src="https://www.google.com/maps/embed?pb=your-google-map-embed-code" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </section>
@@ -63,158 +62,175 @@ include APP_DIR.'views/templates/header.php';
 </div> <!-- End of app -->
 
 <style>
-    /* Header Navigation Bar */
-    .main-header {
-        background-color: #0073e6;
-        color: #fff;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+  /* Shared styles for headers */
+header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
 
-    .logo {
-        font-size: 2em;
-        font-weight: bold;
-    }
+/* Main Header Navigation Bar */
+.main-header {
+    background-color: #0073e6;
+    color: #fff;
+}
 
-    nav a {
-        color: white;
-        margin: 0 15px;
-        text-decoration: none;
-        font-size: 1.1em;
-    }
+.main-header .logo {
+    font-size: 2em;
+    font-weight: bold;
+}
 
-    nav a:hover {
-        text-decoration: underline;
-    }
+.main-header nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 1.1em;
+}
 
-    /* Contact Header */
-    .contact-header {
-        background-color: #0073e6;
-        color: #fff;
-        text-align: center;
-        padding: 60px 20px;
-        background: linear-gradient(135deg, #0073e6, #005bb5);
-    }
+.main-header nav a:hover {
+    text-decoration: underline;
+}
 
-    .contact-header h1 {
-        margin: 0;
-        font-size: 3.5em;
-        font-weight: bold;
-    }
+/* Contact Header */
+.contact-header {
+    background-color: #0073e6;
+    color: #fff;
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0073e6, #005bb5);
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
 
-    .contact-header p {
-        margin-top: 15px;
-        font-size: 1.3em;
-    }
+.contact-header h1 {
+    margin: 0;
+    font-size: 3.5em;
+    font-weight: bold;
+}
 
-    /* Main content */
-    .contact-main {
-        padding: 40px 20px;
-        background-color: #f4f4f4;
-    }
+.contact-header p {
+    margin-top: 15px;
+    font-size: 1.3em;
+}
 
+/* Main content */
+.contact-main {
+    padding: 40px 20px;
+    background-color: #f4f4f4;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.contact-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin-bottom: 30px;
+}
+
+.contact-section h2 {
+    font-size: 2em;
+    color: #0073e6;
+}
+
+.contact-section p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form label {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.contact-form button {
+    background-color: #0073e6;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contact-form button:hover {
+    background-color: #005bb5;
+}
+
+/* Map Section */
+.contact-map {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.contact-map iframe {
+    border: none;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+/* Footer */
+.contact-footer {
+    background-color: #0073e6;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
     .contact-info {
-        display: flex;
-        justify-content: space-between;
-        gap: 30px;
-    }
-
-    .contact-section {
-        background-color: #fff;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        flex: 1;
-    }
-
-    .contact-section h2 {
-        font-size: 2em;
-        color: #0073e6;
-    }
-
-    .contact-section p {
-        font-size: 1.1em;
-        color: #555;
-        line-height: 1.6;
+        flex-direction: column;
+        gap: 20px;
     }
 
     .contact-form {
-        display: flex;
-        flex-direction: column;
+        width: 100%;
     }
 
-    .contact-form label {
-        margin-bottom: 5px;
-        font-size: 1.1em;
+    .contact-section {
+        flex: none;
+        width: 100%;
     }
 
-    .contact-form input, .contact-form textarea {
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 1em;
+    .contact-header h1 {
+        font-size: 2.5em;
     }
 
-    .contact-form button {
-        background-color: #0073e6;
-        color: white;
-        padding: 10px 20px;
-        font-size: 1.1em;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+    .contact-header p {
+        font-size: 1.2em;
     }
+}
 
-    .contact-form button:hover {
-        background-color: #005bb5;
-    }
-
-    /* Map Section */
-    .contact-map {
-        margin-top: 40px;
-        text-align: center;
-    }
-
-    .contact-map iframe {
-        border: none;
-        border-radius: 10px;
-    }
-
-    /* Footer */
-    .contact-footer {
-        background-color: #0073e6;
-        color: #fff;
-        text-align: center;
-        padding: 20px 0;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 768px) {
-        .contact-info {
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .contact-form {
-            width: 100%;
-        }
-
-        .contact-section {
-            flex: none;
-            width: 100%;
-        }
-
-        .contact-header h1 {
-            font-size: 2.5em;
-        }
-
-        .contact-header p {
-            font-size: 1.2em;
-        }
-    }
 </style>
 
 </body>

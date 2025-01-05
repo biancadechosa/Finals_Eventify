@@ -28,15 +28,22 @@
                 <div id="events-container">
                     <?php if (!empty($event)): ?>
                         <?php foreach ($event as $event): ?>
-                            <?php if ($event['status'] !== 'Pending' && $event['status'] !== 'rejected'): // Filter by status ?>
+                            <?php if ($event['status'] !== 'Pending' && $event['status'] !== 'rejected'): ?>
                                 <div class="event-card" data-title="<?= htmlspecialchars($event['title']); ?>" data-description="<?= htmlspecialchars($event['description']); ?>">
-                                    <h3><a href="/user/event/<?= htmlspecialchars($event['event_id']); ?>"><?= htmlspecialchars($event['title']); ?></a></h3>
-                                    <p><?= htmlspecialchars($event['description']); ?></p>
-                                    <p><strong>Location:</strong> <?= htmlspecialchars($event['location']); ?></p>
-                                    <p><strong>Date:</strong> <?= htmlspecialchars($event['start_date']); ?> to <?= htmlspecialchars($event['end_date']); ?></p>
-                                    <p><strong>Price Range:</strong> <?= htmlspecialchars($event['ticket_price']); ?></p>
-                                    <p><strong>Type:</strong> <?= htmlspecialchars($event['type']); ?></p>
-                                    <a class="book-now-btn" href="<?= site_url('/user/create_booking/' . $event['event_id']); ?>">Book Now</a>
+                                    <?php if (!empty($event['images'])): ?>
+                                        <div class="event-image-container">
+                                            <img src="<?= htmlspecialchars($event['images']); ?>" alt="<?= htmlspecialchars($event['title']); ?>" class="event-image">
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="event-details">
+                                        <h3><?= htmlspecialchars($event['title']); ?></h3> <!-- Simple title without link -->
+                                        <p class="event-description"><?= htmlspecialchars($event['description']); ?></p>
+                                        <p><strong>Location:</strong> <?= htmlspecialchars($event['location']); ?></p>
+                                        <p><strong>Date:</strong> <?= htmlspecialchars($event['start_date']); ?> to <?= htmlspecialchars($event['end_date']); ?></p>
+                                        <p><strong>Price Range:</strong> <?= htmlspecialchars($event['ticket_price']); ?></p>
+                                        <p><strong>Type:</strong> <?= htmlspecialchars($event['type']); ?></p>
+                                        <a class="book-now-btn" href="<?= site_url('/user/create_booking/' . $event['event_id']); ?>">Book Now</a>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -45,16 +52,24 @@
                     <?php endif; ?>
                 </div>
             </section>
+
+            <!-- Organizer Application Section -->
+            <section class="apply-organizer">
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="/user/apply_as_organizer" class="apply-btn">Apply as an Organizer</a>
+                </div>
+            </section>
         </div>
     </div>
 
     <style>
+        /* General Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-color: #fafafa;
+            background-color: #f9f9f9;
             color: #333;
         }
 
@@ -73,7 +88,6 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 100%;
         }
 
         .logo {
@@ -125,38 +139,74 @@
 
         .event-card {
             background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .event-card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .event-card h3 {
+        .event-image-container {
+            width: 100%;
+            max-height: 200px;
+            overflow: hidden;
+        }
+
+        .event-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .event-details {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .event-details h3 {
             margin: 0;
             font-size: 1.5em;
             color: #0073e6;
         }
 
-        .event-card p {
+        .event-details .event-description {
+            margin: 10px 0 15px;
+            color: #555;
+            font-size: 1em;
+        }
+
+        .event-details p {
             margin: 5px 0;
             font-size: 1em;
             color: #555;
         }
 
-        .event-card .stars {
-            color: gold;
+        .book-now-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #0073e6;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-now-btn:hover {
+            background-color: #005bb5;
         }
 
         #events-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            padding: 0 15px;
         }
 
         .search-bar {
@@ -173,49 +223,47 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2em;
-            }
+        #event-search:focus {
+            border-color: #0073e6;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+        }
 
-            .hero p {
-                font-size: 1.1em;
-            }
+        .apply-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
 
-            nav a {
-                margin: 0 10px;
-            }
-
-            .events-section h2 {
-                font-size: 1.8em;
-            }
-            
+        .apply-btn:hover {
+            background-color: #218838;
         }
     </style>
 
-    <!-- Add jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
-        $(document).ready(function() {
-            // Event listener for the search input field
-            $('#event-search').on('keyup', function() {
-                var query = $(this).val().toLowerCase(); // Get the search query
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("event-search");
+            const eventCards = document.querySelectorAll(".event-card");
 
-                // Loop through each event card and check if the title or description contains the query
-                $('.event-card').each(function() {
-                    var title = $(this).data('title').toLowerCase();
-                    var description = $(this).data('description').toLowerCase();
+            searchInput.addEventListener("input", function () {
+                const searchQuery = searchInput.value.toLowerCase();
 
-                    // Show or hide the event card based on the search query
-                    if (title.indexOf(query) !== -1 || description.indexOf(query) !== -1) {
-                        $(this).show(); // Show the card if it matches
+                eventCards.forEach(card => {
+                    const title = card.dataset.title.toLowerCase();
+                    const description = card.dataset.description.toLowerCase();
+
+                    if (title.includes(searchQuery) || description.includes(searchQuery)) {
+                        card.style.display = "block";
                     } else {
-                        $(this).hide(); // Hide the card if it doesn't match
+                        card.style.display = "none";
                     }
                 });
             });
         });
     </script>
 </body>
-</html>

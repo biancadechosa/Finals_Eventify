@@ -95,5 +95,18 @@ class User_model extends Model {
         // Use the built-in mail function to send the email
         mail($to_email, $subject, $message, "From: no-reply@eventify.com");
     }
+
+    public function apply($name, $email, $phone, $experience, $event_type, $picture) {
+        $data = array(
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'experience' => $experience,
+            'event_type' => $event_type,
+            'picture' => $picture
+        );
+
+        return $this->db->table('apply')->insert($data);
+    }
 }
 ?>
