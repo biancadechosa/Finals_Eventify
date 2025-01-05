@@ -69,7 +69,7 @@ $router->group('/user', function() use ($router) {
     $router->get('/about', 'User::about');
     $router->get('/contact', 'User::contact');
     $router->match('/create_booking/{event_id}', 'User::create_booking', ['POST', 'GET']);
-    $router->get('/dates/{event_id}', 'User::get_event_dates');
+    $router->match('/apply_as_organizer', 'User::Apply', ['POST', 'GET']);
 });
 
 $router->group('/admin', function() use ($router){
@@ -77,4 +77,5 @@ $router->group('/admin', function() use ($router){
     $router->post('/approve/{event_id}', 'Admin::approve');
     $router->post('/reject/{event_id}', 'Admin::reject');
     $router->post('/delete/{event_id}', 'Admin::delete');
+    $router->match('/manage_application', 'Admin::Approve_application', ['POST', 'GET']);
 });

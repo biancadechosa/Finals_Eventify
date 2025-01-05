@@ -22,5 +22,15 @@ class Admin_model extends Model {
     {
         return $this->db->table('event')->where('event_id', $id)->delete();
     }
+
+    public function approve_application($id, $role)
+    {
+        $this->db->table('users')->where('id', $id)->update(['role' => $role]);
+    }
+    
+    public function reject_application($id)
+{
+    $this->db->table('users')->where('id', $id)->update(['role' => $role]);
+}
 }
 ?>

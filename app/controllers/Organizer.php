@@ -188,8 +188,6 @@ class Organizer extends Controller {
     $status = 'approved'; // Status to set
 
     $this->Organizer_model->update_booking($booking_id, $status);
-        $_SESSION['success'] = 'Booking successfully approved!';
-        header('Location: organizer/manage_booking.php');
     redirect('/organizer/manage_booking');
 }
 

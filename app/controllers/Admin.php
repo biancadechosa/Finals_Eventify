@@ -43,5 +43,14 @@ class Admin extends Controller {
            
         }
     }
+
+    public function Approve_application()
+    {
+        $id = $this->io->post('id');
+        $role = 'organizer'; // Status to set
+    
+        $this->Admin_model->approve_application($id, $role);
+        redirect('/admin/manage_application');
+    }
 }
 ?>
