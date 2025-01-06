@@ -23,14 +23,14 @@ class Admin_model extends Model {
         return $this->db->table('event')->where('event_id', $id)->delete();
     }
 
-    public function approve_application($id, $role)
+    public function approve_application($user_id, $role)
     {
-        $this->db->table('users')->where('id', $id)->update(['role' => $role]);
+        // Update the 'role' in the users table using user_id
+        $this->db->table('users')
+                 ->where('id', $user_id) // user_id maps to the primary key 'id' in users table
+                 ->update(['role' => $role]);
     }
     
-    public function reject_application($id)
-{
-    $this->db->table('users')->where('id', $id)->update(['role' => $role]);
-}
+
 }
 ?>

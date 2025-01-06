@@ -90,6 +90,8 @@
             border-radius: 10px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
             font-size: 0.85em;
+            overflow-y: auto;
+            max-height: 400px;
         }
 
         .preview-section h2 {
@@ -112,14 +114,17 @@
         }
 
         .preview-picture {
-            text-align: center;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .preview-picture img {
-            max-width: 80px;
-            max-height: 80px;
-            border-radius: 50%;
-            margin-top: 5px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ccc;
         }
     </style>
 </head>
@@ -161,15 +166,15 @@
         <!-- Preview Section -->
         <div class="preview-section">
             <h2>Application Preview</h2>
+            <div class="preview-picture">
+                <span>Uploaded Picture:</span>
+                <div id="preview-picture"><img src="" alt="No picture uploaded"></div>
+            </div>
             <div class="field"><span>Full Name:</span> <span id="preview-name">N/A</span></div>
             <div class="field"><span>Email Address:</span> <span id="preview-email">N/A</span></div>
             <div class="field"><span>Phone Number:</span> <span id="preview-phone">N/A</span></div>
             <div class="field"><span>Experience:</span> <span id="preview-experience">N/A</span></div>
             <div class="field"><span>Event Type:</span> <span id="preview-event-type">N/A</span></div>
-            <div class="preview-picture">
-                <span>Uploaded Picture:</span>
-                <div id="preview-picture"><img src="" alt="No picture uploaded"></div>
-            </div>
         </div>
     </div>
 
