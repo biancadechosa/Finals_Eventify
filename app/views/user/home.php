@@ -3,15 +3,7 @@
     <div id="app">
         <div class="container">
             <?php include APP_DIR.'views/templates/nav.php'; ?>
-
-            <header>
-                <div class="logo">Eventify</div>
-                <nav>
-                    <a href="#" id="home-link">Home</a>
-                    <a href="/user/about" id="about-link">About</a>
-                    <a href="/user/contact" id="contact-link">Contact</a>
-                </nav>
-            </header>
+            <?php include APP_DIR.'views/user/header.php'; ?>
 
             <section class="hero">
                 <h1>Find Local Events Near You!</h1>
@@ -78,33 +70,6 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 15px;
-        }
-
-        header {
-            background-color: #0073e6;
-            color: #fff;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 1.1em;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #ffcc00;
         }
 
         .hero {

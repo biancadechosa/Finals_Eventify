@@ -1,3 +1,4 @@
+<?php include APP_DIR.'views/templates/header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,9 +140,49 @@
         .container {
             padding: 3rem 5%;
         }
+        
+        /* Enhanced Navigation and Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0056b3;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-section .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .header-section .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .header-section .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .header-section .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .header-section .search-bar input {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: none;
+        }
     </style>
 </head>
 <body>
+    <?php include APP_DIR.'views/user/header.php'; ?>
+
     <div class="container">
         <div class="card">
             <div class="card-body">
@@ -259,7 +300,6 @@
         document.body.removeChild(tempInput);
         alert('Ticket number copied to clipboard!');
     }
-</script>
-
+    </script>
 </body>
 </html>

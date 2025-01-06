@@ -108,5 +108,6 @@ class User_model extends Model {
 
         return $this->db->table('apply')->insert($data);
     }
+
 }
 ?>
