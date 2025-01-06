@@ -1,3 +1,5 @@
+<?php include APP_DIR.'views/user/header.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,14 +12,14 @@
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
 
         .container {
             display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 20px auto;
             width: 90%;
             max-width: 1000px;
             background: #fff;

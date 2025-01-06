@@ -1,26 +1,14 @@
-<?php
-include APP_DIR.'views/templates/header.php';
-?>
-<div id="app">
-    <?php include APP_DIR.'views/templates/nav.php'; ?>
+<?php include APP_DIR . 'views/templates/header.php'; ?>
+<body>
+    <div id="app">
+        <div class="container">
+            <?php include APP_DIR . 'views/templates/nav.php'; ?>
+            <?php include APP_DIR . 'views/user/header.php'; ?>
 
-    <div id="app-content">
-        <!-- Navigation Header -->
-        <header class="about-header">
-            <div class="logo">Eventify</div>
-            <nav>
-                <a href="/user/home" id="home-link">Home</a>
-                <a href="#" id="about-link">About</a>
-                <a href="/user/contact" id="contact-link">Contact</a>
-            </nav>
-        </header>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="main-header">
+            <section class="hero">
                 <h1>About Eventify</h1>
                 <p>Your Ultimate Local Event Finder</p>
-            </header>
+            </section>
 
             <main class="about-main">
                 <section class="about-section">
@@ -48,130 +36,83 @@ include APP_DIR.'views/templates/header.php';
                     <p>At Eventify, our mission is to make it easier for people to discover and attend local events. We believe that great experiences should be accessible to everyone, and we're committed to providing a platform that simplifies the process of finding and booking events. Join us today and start exploring!</p>
                 </section>
             </main>
+
+            <footer class="about-footer">
+                <p>&copy; 2024 Eventify. All rights reserved.</p>
+            </footer>
         </div>
-    </div> <!-- End of app-content -->
+    </div>
 
-    <footer class="about-footer">
-        <p>&copy; 2024 Eventify. All rights reserved.</p>
-    </footer>
-</div> <!-- End of app -->
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            color: #333;
+        }
 
-<style>
-    /* Fixed Navigation Header */
-    .about-header {
-        background-color: #0073e6;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 30px;
-        color: #fff;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 100;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
 
-    .logo {
-        font-size: 1.8em;
-        font-weight: bold;
-        color: #fff;
-        text-transform: uppercase;
-    }
-
-    nav a {
-        color: #fff;
-        margin-left: 20px;
-        text-decoration: none;
-        font-size: 1.1em;
-    }
-
-    nav a:hover {
-        text-decoration: underline;
-    }
-
-    /* Main content header */
-    .main-header {
-        background: linear-gradient(135deg, #0073e6, #005bb5);
-        color: #fff;
-        text-align: center;
-        padding: 80px 20px 20px;
-        margin-top: 80px; /* Offset for fixed nav */
-    }
-
-    .main-header h1 {
-        margin: 0;
-        font-size: 3em;
-        font-weight: bold;
-    }
-
-    .main-header p {
-        font-size: 1.2em;
-        margin-top: 10px;
-    }
-
-    /* About Main Content */
-    .about-main {
-        padding: 40px 20px;
-        background-color: #f4f4f4;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .about-section {
-        margin-bottom: 30px;
-    }
-
-    .about-section h2 {
-        color: #0073e6;
-        font-size: 2em;
-        margin-bottom: 10px;
-    }
-
-    .about-section p,
-    .about-section ul {
-        font-size: 1.1em;
-        line-height: 1.6;
-        color: #555;
-    }
-
-    .about-section ul {
-        padding-left: 20px;
-    }
-
-    .about-section ul li {
-        margin-bottom: 10px;
-    }
-
-    /* Footer */
-    .about-footer {
-        background-color: #0073e6;
-        color: #fff;
-        text-align: center;
-        padding: 20px 0;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 768px) {
-        .about-header {
-            flex-direction: column;
+        .hero {
             text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #0073e6, #005bb5);
+            color: #fff;
         }
 
-        .main-header {
-            padding: 100px 20px 20px;
-        }
-
-        .main-header h1 {
+        .hero h1 {
+            margin: 0;
             font-size: 2.5em;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            margin: 15px 0 25px;
+            font-size: 1.2em;
+            color: #f1f1f1;
         }
 
         .about-main {
-            padding: 20px;
+            padding: 40px 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-section {
+            margin-bottom: 30px;
         }
 
         .about-section h2 {
-            font-size: 1.5em;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #0073e6;
         }
-    }
-</style>
+
+        .about-section p,
+        .about-section ul {
+            font-size: 1em;
+            color: #555;
+        }
+
+        .about-section ul {
+            padding-left: 20px;
+            list-style: disc;
+        }
+
+        .about-footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</body>
