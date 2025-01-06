@@ -1,3 +1,11 @@
+<?php
+include APP_DIR.'views/templates/header.php';
+?>
+<body>
+    <div id="app">
+    <?php
+    include APP_DIR.'views/templates/nav.php';
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
