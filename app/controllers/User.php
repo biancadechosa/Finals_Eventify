@@ -73,36 +73,55 @@ class User extends Controller {
         $this->call->view('user/bookings', ['event' => $event]);
     }
 
-    // New function to handle organizer applications
     public function Apply() {
-        // Check if the form is submitted
-        if ($this->form_validation->submitted()) {
+        // Check if the form is submitted via POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Gather all form inputs
             $name = $this->io->post('name');
             $email = $this->io->post('email');
             $phone = $this->io->post('phone');
             $experience = $this->io->post('experience');
             $event_type = $this->io->post('event_type');
+            
+            // Step 1: Check if the email exists in the users table
+            $existing_user = $this->User_model->get_user_by_email($email);
     
-            // Handle file upload
+            // If the email doesn't exist, prevent the form submission and display the error
+            if (!$existing_user['success'] || !isset($existing_user['data']['id'])) {
+                set_flash_alert('danger', 'The email address does not exist in our system.');
+                redirect('/user/apply_as_organizer');
+                return;
+            }
+    
+            // Step 2: Check if the user has already submitted an application in the 'apply' table
+            $existing_application = $this->User_model->get_application_by_email($email);  // Changed to check in 'apply' table
+            if ($existing_application) {
+                set_flash_alert('danger', 'This email has already submitted an application.');
+                redirect('/user/apply_as_organizer');
+                return;
+            }
+    
+            // Step 3: Handle file upload
             $picture = $this->handleFileUpload();
+    
+            // Step 4: Get the user_id from the users table based on email
+            $user_id = $existing_user['data']['id'];  // Now accessing the 'id' directly from the single user record
     
             // Run form validation
             if ($this->form_validation->run()) {
-                // Apply the user data to the model
-                $application_successful = $this->User_model->apply($name, $email, $phone, $experience, $event_type, $picture);
+                // Prepare the data for the apply table, including the user_id
+                $application_successful = $this->User_model->apply($user_id, $name, $email, $phone, $experience, $event_type, $picture);
     
-                // Check if the application was successful
                 if ($application_successful) {
-                    flash_alert('Application submitted successfully!', 'success');
-                    redirect('/user/home');
+                    set_flash_alert('success', 'Application submitted successfully!');
+                    redirect('/user/apply_as_organizer');
                 } else {
-                    flash_alert('Failed to submit application.', 'error');
+                    set_flash_alert('danger', 'Failed to submit application. Please try again.');
                     redirect('/user/apply_as_organizer');
                 }
             } else {
                 // Form validation failed
-                flash_alert($this->form_validation->errors(), 'error');
+                set_flash_alert('danger', $this->form_validation->errors());
                 redirect('/user/apply_as_organizer');
             }
         } else {
@@ -110,6 +129,8 @@ class User extends Controller {
             $this->call->view('user/apply');
         }
     }
+    
+    
     
     /**
      * Handle file upload for the user picture.
@@ -132,7 +153,8 @@ class User extends Controller {
             if (move_uploaded_file($_FILES['picture']['tmp_name'], $file_path)) {
                 $picture = $file_path;
             } else {
-                flash_alert('Failed to upload picture.', 'error');
+                // Error during file upload
+                set_flash_alert('danger', 'Failed to upload picture. Please try again.');
                 redirect('/user/apply_as_organizer');
             }
         }

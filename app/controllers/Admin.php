@@ -74,6 +74,7 @@ class Admin extends Controller {
                 a.experience,
                 a.event_type,
                 a.picture,
+                a.status,
                 u.role AS user_role,
                 a.created_at,
                 a.user_id
@@ -105,9 +106,33 @@ class Admin extends Controller {
         // Update the role in the users table
         $this->Admin_model->approve_application($user_id, $role);
     
+        // Set a success message for approval
+        $this->session->set_flashdata('message', 'Application approved successfully.');
+    
         // Redirect back to the applications page
         redirect('/admin/manage_application');
     }
+    
+    public function Reject_application()
+    {
+        $user_id = $this->io->post('user_id'); // Get user_id from POST data
+        $role = 'user'; // New role to set
+    
+        if (!$user_id) {
+            // Handle missing user_id error
+            redirect('/admin/manage_application');
+        }
+    
+        // Update the role in the users table
+        $this->Admin_model->reject_application($user_id, $role);
+    
+        // Set a success message for rejection
+        $this->session->set_flashdata('message', 'Application rejected successfully.');
+    
+        // Redirect back to the applications page
+        redirect('/admin/manage_application');
+    }
+    
     
 }
 ?>
