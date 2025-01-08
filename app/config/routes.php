@@ -78,6 +78,6 @@ $router->group('/admin', function() use ($router){
     $router->post('/reject/{event_id}', 'Admin::reject');
     $router->post('/delete/{event_id}', 'Admin::delete');
     $router->match('/manage_application', 'Admin::manageApplications', ['POST', 'GET']);
-    $router->post('/reject_application/{apply_id}', 'Admin::reject_application');
-    $router->post('/approve_application/{apply_id}', 'Admin::approve_application');
+    $router->post('/reject_application/{apply_id}', 'Admin::Reject_application');
+    $router->post('/approve_application/{apply_id}', 'Admin::Approve_application');
 });

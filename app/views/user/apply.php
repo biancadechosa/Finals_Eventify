@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apply as Organizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -135,7 +136,9 @@
         <!-- Form Section -->
         <div class="form-section">
             <h1>Apply as an Organizer</h1>
+            <?php flash_alert(); ?>
             <form action="<?= site_url('/user/apply_as_organizer/'); ?>" method="POST" enctype="multipart/form-data">
+           
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="Enter your full name" oninput="updatePreview()" required>
 

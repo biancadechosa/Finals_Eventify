@@ -96,8 +96,9 @@ class User_model extends Model {
         mail($to_email, $subject, $message, "From: no-reply@eventify.com");
     }
 
-    public function apply($name, $email, $phone, $experience, $event_type, $picture) {
+    public function apply($user_id, $name, $email, $phone, $experience, $event_type, $picture) {
         $data = array(
+            'user_id' => $user_id,  // Add the user_id to the data array
             'name' => $name,
             'email' => $email,
             'phone' => $phone,
@@ -105,9 +106,51 @@ class User_model extends Model {
             'event_type' => $event_type,
             'picture' => $picture
         );
-
+    
+        // Insert the data into the 'apply' table
         return $this->db->table('apply')->insert($data);
     }
+    
+    public function get_user_by_email($email) {
+        // Perform the query to get the user by email
+        $result = $this->db->table('users')
+                           ->where('email', $email)
+                           ->get();
+    
+        // Debugging: Check the structure of the result
+        echo '<pre>';
+        var_dump($result);  // This will display the structure of the result
+        echo '</pre>';
+    
+        // Check if result is an array and not empty
+        if (is_array($result) && count($result) > 0) {
+            return array(
+                'success' => true,
+                'data' => $result  // Return the entire result as an associative array
+            );
+        }
+    
+        // If no user is found, return false
+        return array(
+            'success' => false,
+            'data' => null  // No user found
+        );
+    }
 
+    public function get_application_by_email($email) {
+        // Query the 'apply' table to check if the email already exists
+        $result = $this->db->table('apply')
+                           ->where('email', $email)
+                           ->get();
+    
+        // Check if result is an array and not empty
+        if (is_array($result) && count($result) > 0) {
+            return true;  // Email found in the 'apply' table, meaning the user already submitted an application
+        }
+    
+        return false;  // No application found for this email
+    }
+    
+    
 }
 ?>
