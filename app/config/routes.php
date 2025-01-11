@@ -70,6 +70,9 @@ $router->group('/user', function() use ($router) {
     $router->get('/contact', 'User::contact');
     $router->match('/create_booking/{event_id}', 'User::create_booking', ['POST', 'GET']);
     $router->match('/apply_as_organizer', 'User::Apply', ['POST', 'GET']);
+    $router->get('/mybook', 'User::myBook');
+    $router->post('/cancel_booking/{booking_id}', 'User::Cancel_booking');
+    $router->post('/view_email/{booking_id}', 'User::Get_email_notifications');
 });
 
 $router->group('/admin', function() use ($router){

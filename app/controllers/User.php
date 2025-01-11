@@ -6,6 +6,25 @@ class User extends Controller {
     public function __construct() {
         parent::__construct();
         $this->call->model('User_model');
+
+        $host = 'localhost';
+        $db = 'eventify';
+        $user = 'root';
+        $pass = '';
+        $charset = 'utf8mb4';
+
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+
+        try {
+            $this->pdo = new PDO($dsn, $user, $pass, $options);
+        } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+        }
     }
 
     public function home() {
@@ -161,6 +180,80 @@ class User extends Controller {
     
         return $picture;
     }
+
+    public function myBook() {
+        // Assuming the user ID is stored in the session
+        $userId = $_SESSION['user_id']; // Adjust this based on how you store user session data
+        
+        // Query to fetch bookings for the logged-in user
+        $query = "
+            SELECT 
+                b.booking_id,
+                e.title AS event_title,
+                b.booking_date,
+                b.ticket_quantity,
+                b.ticket_number,
+                b.reminder_set,
+                b.reminder_date,
+                b.status
+            FROM bookings b
+            INNER JOIN event e ON b.event_id = e.event_id
+            WHERE b.user_id = :user_id";  // Add condition to filter by the logged-in user's ID
+    
+        // Prepare the query and execute
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);  // Bind the user ID parameter
+        $stmt->execute();
+    
+        // Fetch the results and store in a variable
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Return the data to the view
+        $this->call->view('user/mybook', ['bookings' => $bookings]);
+    }
+    
+    public function Cancel_booking()
+{
+    $booking_id = $this->io->post('booking_id');
+    $status = 'cancelled'; // Status to set
+
+    $this->User_model->Cancel_book($booking_id, $status);
+    redirect('/user/mybook');
+}
+
+public function Get_email_notifications($booking_id) {
+    // Prepare the SQL query
+    $query = "
+        SELECT 
+            id, 
+            recipient_email, 
+            subject, 
+            message, 
+            sent_at, 
+            ticket_number, 
+            ticket_quantity, 
+            event_id, 
+            event_title, 
+            event_location, 
+            start_date, 
+            end_date, 
+            ticket_price
+        FROM email_notifications
+        WHERE booking_id = :booking_id";  // Add condition to filter by the booking_id
+    
+    // Prepare the query and execute
+    $stmt = $this->pdo->prepare($query);
+    $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_INT);  // Bind the booking ID parameter
+    $stmt->execute();
+    
+    // Fetch the results and store in a variable
+    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Pass the fetched data to the view
+    $this->call->view('user/view_email', ['notifications' => $notifications]);
+}
+
+
     
 }
 ?>

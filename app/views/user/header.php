@@ -43,6 +43,7 @@
             <a href="/user/home" id="home-link">Home</a>
             <a href="/user/about" id="about-link">About</a>
             <a href="/user/contact" id="contact-link">Contact</a>
+            <a href="/user/mybook" id="contact-link">My Bookings</a>
         </nav>
     </header>
 
