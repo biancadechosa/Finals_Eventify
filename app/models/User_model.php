@@ -117,11 +117,6 @@ class User_model extends Model {
                            ->where('email', $email)
                            ->get();
     
-        // Debugging: Check the structure of the result
-        echo '<pre>';
-        var_dump($result);  // This will display the structure of the result
-        echo '</pre>';
-    
         // Check if result is an array and not empty
         if (is_array($result) && count($result) > 0) {
             return array(
@@ -151,6 +146,12 @@ class User_model extends Model {
         return false;  // No application found for this email
     }
     
+    public function Cancel_book($booking_id, $status)
+    {
+        $this->db->table('bookings')->where('booking_id', $booking_id)->update(['status' => $status]);
+    }
     
 }
+
+
 ?>

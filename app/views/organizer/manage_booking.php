@@ -162,6 +162,10 @@ include APP_DIR.'views/templates/header.php';
     background-color: #dc3545; /* Red */
 }
 
+.status-cancelled {
+    background-color:rgb(220, 53, 164); /* Red */
+}
+
 /* Button Styles */
 button {
     padding: 0.3rem 1.2rem;
@@ -211,6 +215,7 @@ form {
 </div>
     <div class="container">
         <h1 class="text-center mb-4">Organizer Dashboard</h1>
+        <?php flash_alert(); ?>
 
         <!-- Pending Bookings -->
         <div class="card">
@@ -330,6 +335,49 @@ form {
                     <tbody>
                         <?php foreach ($bookings as $booking) : ?>
                             <?php if ($booking['status'] == 'rejected'): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($booking['booking_id'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['event_title'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['user_email'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['booking_date'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_quantity'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['ticket_number'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_set'] ?? 'N/A'); ?></td>
+                                <td><?= htmlspecialchars($booking['reminder_date'] ?? 'N/A'); ?></td>
+                                <td>
+    <span class="status-badge status-<?= strtolower($booking['status']); ?>">
+        <?= $booking['status']; ?>
+    </span>
+</td>
+
+                            </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Cancelled Bookings</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Event</th>
+                            <th>User Email</th>
+                            <th>Booking Date</th>
+                            <th>Ticket Quantity</th>
+                            <th>Ticket Number</th>
+                            <th>Reminder Set</th>
+                            <th>Reminder Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($bookings as $booking) : ?>
+                            <?php if ($booking['status'] == 'cancelled'): ?>
                             <tr>
                                 <td><?= htmlspecialchars($booking['booking_id'] ?? 'N/A'); ?></td>
                                 <td><?= htmlspecialchars($booking['event_title'] ?? 'N/A'); ?></td>
