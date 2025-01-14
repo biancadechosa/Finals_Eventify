@@ -50,6 +50,19 @@ class Lauth {
 		$this->LAVA->call->library('session');
 	}
 
+	public function get_user_details($user_id) {
+		// Query the users table for the details of the user with the given ID
+		$user = $this->LAVA->db->table('users')
+							   ->where('id', $user_id)
+							   ->get();
+	
+		// Return the user details if found, otherwise return false
+		return $user ? $user : false;
+	}
+	
+
+	
+
 	/**
 	 * Password Default Hash
 	 * @param  string $password User Password

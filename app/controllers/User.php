@@ -253,7 +253,39 @@ public function Get_email_notifications($booking_id) {
     $this->call->view('user/view_email', ['notifications' => $notifications]);
 }
 
+public function Access_organizer_panel() {
+    // Check if the user is logged in
+    if (!isset($_SESSION['id'])) {
+        set_flash_alert('danger', 'You must log in to access this section.');
+        redirect('/user/login');
+        return;
+    }
 
-    
+    // Get the logged-in user ID
+    $user_id = $_SESSION['id'];
+
+    // Get the user details, including role
+    $users = $this->User_model->Get_user_by_id($user_id);
+
+    // Debugging: Check if the $users variable is populated
+    var_dump($users);  // This will print the $users array or object to check its contents
+
+    // If users data is returned (not null)
+    if ($users) {
+        // Check if the user is an organizer
+        if ($this->User_model->Check_user_role($user_id)) {
+            // Pass the user data to the header view
+            $this->call->view('user/header', ['users' => $users]);  // Make sure this is the correct path
+        } else {
+            set_flash_alert('danger', 'You do not have permission to access this panel.');
+            redirect('/user/home');
+        }
+    } else {
+        // Handle case where user data is not found (just in case)
+        set_flash_alert('danger', 'User not found.');
+        redirect('/user/login');
+    }
+}
+
 }
 ?>
