@@ -19,22 +19,49 @@ class Auth extends Controller {
     }  
 
     public function login() {
-        if($this->form_validation->submitted()) {
+        if ($this->form_validation->submitted()) {
             $email = $this->io->post('email');
-			$password = $this->io->post('password');
+            $password = $this->io->post('password');
             $data = $this->lauth->login($email, $password);
-            if(empty($data)) {
-				$this->session->set_flashdata(['is_invalid' => 'is-invalid']);
-                $this->session->set_flashdata(['err_message' => 'These credentials do not match our records.']);
-			} else {
-				$this->lauth->set_logged_in($data);
-			}
-            redirect('auth/login');
+    
+            if (empty($data)) {
+                // Invalid login credentials
+                $this->session->set_flashdata('err_message', 'These credentials do not match our records.');
+                redirect('auth/login');
+            } else {
+                // Fetch user details if only ID is returned
+                $user = is_array($data) ? $data : $this->lauth->get_user_details($data);
+    
+                if ($user) {
+                    // Set session variables
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['logged_in'] = true;
+                    $_SESSION['role'] = $user['role'];
+                    $_SESSION['email'] = $user['email'];
+    
+                    // Check if the user is the specific one with email 'sophiadechosa12@gmail.com' and password '87654321'
+                    if ($email === 'sophiadechosa12@gmail.com' && $password === '87654321') {
+                        // Redirect to /admin/dashboard
+                        redirect('/admin/dashboard');
+                    } else {
+                        // Redirect based on user role
+                        $redirect_url = ($_SESSION['role'] === 'organizer') ? '/organizer/dashboard' : '/user/home';
+                        redirect($redirect_url);
+                    }
+                } else {
+                    // User not found (edge case)
+                    $this->session->set_flashdata('err_message', 'User not found.');
+                    redirect('auth/login');
+                }
+            }
         } else {
             $this->call->view('auth/login');
         }
-        
     }
+    
+    
+    
+    
 
     public function register() {
 

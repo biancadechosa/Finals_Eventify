@@ -1,3 +1,10 @@
+<?php
+// Start the session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
     <style>
-        /* Header Styling */
         header {
             background-color: #0073e6;
             color: #fff;
@@ -35,20 +41,21 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="/user/home" style="color: #fff; text-decoration: none;">Eventify</a>
-        </div>
-        <nav>
-            <a href="/user/home" id="home-link">Home</a>
-            <a href="/user/about" id="about-link">About</a>
-            <a href="/user/contact" id="contact-link">Contact</a>
-            <a href="/user/mybook" id="contact-link">My Bookings</a>
-        </nav>
-    </header>
-
-    <script>
-        // You can add any header-specific scripts here if needed in the future
-    </script>
+<header>
+    <div class="logo">
+        <a href="/user/home" style="color: #fff; text-decoration: none;">Eventify</a>
+    </div>
+    <nav>
+        <a href="/user/home">Home</a>
+        <a href="/user/about">About</a>
+        <a href="/user/contact">Contact</a>
+        <a href="/user/mybook">My Bookings</a>
+        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+            <?php if ($_SESSION['role'] === 'organizer'): ?>
+                <a href="<?= site_url('/organizer/dashboard'); ?>">Continue as Organizer</a>
+            <?php endif; ?>
+        <?php endif; ?>
+    </nav>
+</header>
 </body>
 </html>

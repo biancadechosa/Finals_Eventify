@@ -45,7 +45,6 @@ class Organizer extends Controller {
             $ratings = $this->io->post('ratings');
             $type = $this->io->post('type');
             $ticket_price = $this->io->post('ticket_price');
-            $available_tickets = $this->io->post('available_tickets');
 
             $image_path = '/public/images/flowers.png'; 
             if (isset($_FILES['images']) && $_FILES['images']['error'] == 0) {
@@ -67,7 +66,6 @@ class Organizer extends Controller {
                 $ratings,
                 $type,
                 $ticket_price,
-                $available_tickets,
                 $image_path
             );
 
@@ -94,7 +92,6 @@ class Organizer extends Controller {
             $ratings = $this->io->post('ratings');
             $type = $this->io->post('type');
             $ticket_price = $this->io->post('ticket_price');
-            $available_tickets = $this->io->post('available_tickets');
     
             $image_path = null; 
             if (isset($_FILES['images']) && $_FILES['images']['error'] === UPLOAD_ERR_OK) {
@@ -119,7 +116,6 @@ class Organizer extends Controller {
                 $ratings,
                 $type,
                 $ticket_price,
-                $available_tickets,
                 $image_path, 
                 $id
             )) {
@@ -156,7 +152,10 @@ class Organizer extends Controller {
     // Inside your EventController.php or BookingController.php or OrganizerController.php
 
     public function manageBooking() {
-        // Query to fetch all bookings (no event_id required)
+        // Assuming the user ID is stored in the session
+        $user_id = $_SESSION['user_id'];  // Adjust this if you're using a different session variable for user ID
+    
+        // Query to fetch only bookings for the logged-in user
         $query = "
             SELECT 
                 b.booking_id,
@@ -170,26 +169,21 @@ class Organizer extends Controller {
                 b.status
             FROM bookings b
             INNER JOIN event e ON b.event_id = e.event_id
-            INNER JOIN users u ON b.user_id = u.id";
-    
+            INNER JOIN users u ON b.user_id = u.id
+            WHERE b.user_id = :user_id";  // Filter by the logged-in user's ID
+        
         // Prepare the query and execute
         $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);  // Bind the user ID
         $stmt->execute();
-    
+        
         // Fetch the results and store in a variable
         $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+        
         // Return the data to the view
         $this->call->view('organizer/manage_booking', ['bookings' => $bookings]);
     }
-    public function approve_booking()
-{
-    $booking_id = $this->io->post('booking_id');
-    $status = 'approved'; // Status to set
-
-    $this->Organizer_model->update_booking($booking_id, $status);
-    redirect('/organizer/manage_booking');
-}
+    
 
 
 public function reject_booking()

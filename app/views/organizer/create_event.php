@@ -107,10 +107,6 @@
                         <input type="text" class="form-control" id="type" name="type">
                     </div>
                     <div class="mb-3">
-                        <label for="available_tickets">Available Tickets:</label>
-                        <input type="number" class="form-control" id="available_tickets" name="available_tickets" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="images">Images:</label>
                         <input type="file" class="form-control" id="images" name="images">
                     </div>

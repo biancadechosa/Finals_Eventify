@@ -55,6 +55,7 @@ $router->group('/auth', function() use ($router){
 
 $router->group('/organizer', function() use ($router){
     $router->match('/dashboard', 'Organizer::dashboard', ['POST', 'GET']);
+    $router->match('/dashboard', 'User::Access_organizer_panel', ['POST', 'GET']);
     $router->match('/create', 'Organizer::create', ['POST', 'GET']);
     $router->match('/update/{event_id}', 'Organizer::update', ['POST', 'GET']);
     $router->match('/delete/{event_id}', 'Organizer::delete', ['POST', 'GET']);
@@ -62,6 +63,7 @@ $router->group('/organizer', function() use ($router){
     $router->match('/manage_booking', 'Organizer::manageBooking', ['POST', 'GET']);
     $router->post('/reject_booking/{booking_id}', 'Organizer::reject_booking');
     $router->post('/approve_booking/{booking_id}', 'Organizer::approve_booking');
+  
 });
 
 $router->group('/user', function() use ($router) {
@@ -73,6 +75,7 @@ $router->group('/user', function() use ($router) {
     $router->get('/mybook', 'User::myBook');
     $router->post('/cancel_booking/{booking_id}', 'User::Cancel_booking');
     $router->post('/view_email/{booking_id}', 'User::Get_email_notifications');
+  
 });
 
 $router->group('/admin', function() use ($router){

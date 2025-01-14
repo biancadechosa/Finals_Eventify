@@ -4,10 +4,15 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 class Organizer_model extends Model {
 
     public function dashboard() {
-        return $this->db->table('event')->get_all();
+        $userId = $_SESSION['user_id'];  // Get the logged-in user's ID from session
+        return $this->db->table('event')->where('user_id', $userId)->get_all();  // Fetch events for this user
     }
+    
 
-    public function create_event($title, $description, $location, $start_date, $end_date, $popularity, $ratings, $type, $ticket_price, $available_tickets, $image_path) {
+    public function create_event($title, $description, $location, $start_date, $end_date, $popularity, $ratings, $type, $ticket_price, $image_path) {
+        // Get the logged-in user's ID from the session
+        $userId = $_SESSION['user_id']; 
+    
         $data = array(
             'title' => $title,
             'description' => $description,
@@ -18,18 +23,19 @@ class Organizer_model extends Model {
             'ratings' => $ratings,
             'type' => $type,
             'ticket_price' => $ticket_price,
-            'available_tickets' => $available_tickets,
-            'images' => $image_path // Store the image path
+            'images' => $image_path, // Store the image path
+            'user_id' => $userId // Assign the user ID
         );
-
+    
         return $this->db->table('event')->insert($data);
     }
+    
 
     public function get_one($id) {
         return $this->db->table('event')->where('event_id', $id)->get();
     }
 
-    public function update_event($title, $description, $location, $start_date, $end_date, $popularity, $ratings, $type, $ticket_price, $available_tickets, $image_path, $id) {
+    public function update_event($title, $description, $location, $start_date, $end_date, $popularity, $ratings, $type, $ticket_price, $image_path, $id) {
         // Prepare the data array
         $data = array(
             'title' => $title,
@@ -41,7 +47,6 @@ class Organizer_model extends Model {
             'ratings' => $ratings,
             'type' => $type,
             'ticket_price' => $ticket_price,
-            'available_tickets' => $available_tickets,
         );
     
         // Add the image path only if a new image was uploaded

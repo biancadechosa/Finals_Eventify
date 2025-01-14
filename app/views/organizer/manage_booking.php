@@ -21,14 +21,17 @@ include APP_DIR.'views/templates/header.php';
 
         .container {
             padding: 2rem 5%;
+            z-index: 0; /* Ensure content is below the sidebar */
         }
 
         .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            margin-bottom: 2rem;
-        }
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+    width: 100%; /* Ensure it takes up full width within the max-width limit */
+}
+
 
         .card-title {
             font-size: 1.5rem;
@@ -71,6 +74,7 @@ include APP_DIR.'views/templates/header.php';
             color: white;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease; 
+            z-index: 1000; /* Ensure sidebar is above the content */
         }
 
         .sidebar.visible {
@@ -107,7 +111,7 @@ include APP_DIR.'views/templates/header.php';
             top: 15px;
             left: 15px;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 1001; /* Ensure hamburger button is above the sidebar */
             font-size: 25px;
             background-color: #003060;
             color: white;
@@ -143,64 +147,86 @@ include APP_DIR.'views/templates/header.php';
         }
 
         .status-badge {
-    padding: 0.4rem 1rem;
-    border-radius: 15px;
-    font-weight: bold;
-    color: white;
-    display: inline-block;
-}
+            padding: 0.4rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            color: white;
+            display: inline-block;
+        }
 
-.status-approved {
-    background-color: #28a745; /* Green */
-}
+        .status-approved {
+            background-color: #28a745; /* Green */
+        }
 
-.status-pending {
-    background-color: #ffc107; /* Yellow */
-}
+        .status-pending {
+            background-color: #ffc107; /* Yellow */
+        }
 
-.status-rejected {
-    background-color: #dc3545; /* Red */
-}
+        .status-rejected {
+            background-color: #dc3545; /* Red */
+        }
 
-.status-cancelled {
-    background-color:rgb(220, 53, 164); /* Red */
-}
+        .status-cancelled {
+            background-color:rgb(220, 53, 164); /* Red */
+        }
 
-/* Button Styles */
-button {
-    padding: 0.3rem 1.2rem;
-    border-radius: 5px;
-    font-weight: bold;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        /* Button Styles */
+        button {
+            padding: 0.3rem 1.2rem;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-/* Approve Button */
-.approve-btn {
-    background-color: #28a745; /* Green */
-}
+        /* Approve Button */
+        .approve-btn {
+            background-color: #28a745; /* Green */
+        }
 
-.approve-btn:hover {
-    background-color: #218838; /* Darker green on hover */
-}
+        .approve-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
 
-/* Reject Button */
-.reject-btn {
-    background-color: #dc3545; /* Red */
-}
+        /* Reject Button */
+        .reject-btn {
+            background-color: #dc3545; /* Red */
+        }
 
-.reject-btn:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
+        .reject-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
 
-/* Optional: Add padding to the form so buttons are spaced out */
-form {
-    margin-right: 10px;
-}
+        /* Optional: Add padding to the form so buttons are spaced out */
+        form {
+            margin-right: 10px;
+        }
+        .hero {
+            background-color: #004080;  /* Dark blue background */
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            width: 100%;  /* Make the section full-width */
+            text-align: center;  /* Center the text */
+        }
 
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            text-align: center;  /* Justify the paragraph text */
+            margin: 0 auto;  /* Center the content in the section */
+            width: 90%;  /* Optional: Add a width limit for readability */
+        }
     </style>
 </head>
 <body>
@@ -213,8 +239,11 @@ form {
     <a href="<?= site_url('/organizer/dashboard'); ?>" id="events-link" >Events</a>
     <a href="<?= site_url('/organizer/manage_booking'); ?>" id="booking-link" class="active">Manage Bookings</a>
 </div>
+<section class="hero mb-5">
+    <h1>Manage Your Bookings!</h1>
+    <p>View, update, and manage all your event bookings easily with Eventify.</p>
+</section>
     <div class="container">
-        <h1 class="text-center mb-4">Organizer Dashboard</h1>
         <?php flash_alert(); ?>
 
         <!-- Pending Bookings -->
@@ -249,17 +278,16 @@ form {
                                 <td><?= htmlspecialchars($booking['reminder_date'] ?? 'N/A'); ?></td>
                                 <td>
                                     <!-- Approve Booking Form -->
-<form method="post" action="<?= site_url('/organizer/approve_booking/'.$booking['booking_id']); ?>" style="display:inline-block;" onsubmit="return confirmApprove();">
-    <input type="hidden" name="booking_id" value="<?= $booking['booking_id']; ?>">
-    <button type="submit" class="approve-btn">Approve</button>
-</form>
+                                    <form method="post" action="<?= site_url('/organizer/approve_booking/'.$booking['booking_id']); ?>" style="display:inline-block;" onsubmit="return confirmApprove();">
+                                        <input type="hidden" name="booking_id" value="<?= $booking['booking_id']; ?>">
+                                        <button type="submit" class="approve-btn">Approve</button>
+                                    </form>
 
-<!-- Reject Booking Form -->
-<form method="post" action="<?= site_url('/organizer/reject_booking/'.$booking['booking_id']); ?>" style="display:inline-block;" onsubmit="return confirmDelete();">
-    <input type="hidden" name="booking_id" value="<?= $booking['booking_id']; ?>">
-    <button type="submit" class="reject-btn">Reject</button>
-</form>
-
+                                    <!-- Reject Booking Form -->
+                                    <form method="post" action="<?= site_url('/organizer/reject_booking/'.$booking['booking_id']); ?>" style="display:inline-block;" onsubmit="return confirmReject();">
+                                        <input type="hidden" name="booking_id" value="<?= $booking['booking_id']; ?>">
+                                        <button type="submit" class="reject-btn">Reject</button>
+                                    </form>
                                 </td>
                             </tr>
                             <?php endif; ?>
@@ -269,8 +297,8 @@ form {
             </div>
         </div>
 
-        <!-- Approved Bookings -->
-        <div class="card">
+          <!-- Approved Bookings -->
+          <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Approved Bookings</h5>
                 <table class="table">
@@ -403,25 +431,11 @@ form {
 
     </div>
 
-    <footer>
-        <p>&copy; <?= date('Y'); ?> Your Organization. All rights reserved.</p>
-    </footer>
+<script>
+    document.getElementById('hamburger').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('visible');
+    });
+</script>
 
-    <script>
-        // Hamburger menu toggle
-        const hamburger = document.getElementById("hamburger");
-        const sidebar = document.getElementById("sidebar");
-
-        hamburger.addEventListener("click", () => {
-            sidebar.classList.toggle("visible");
-        });
-
-        function confirmDelete() {
-            return confirm('Are you sure you want to reject this booking?');
-        }
-        function confirmApprove() {
-            return confirm('Approve this booking?');
-        }
-    </script>
 </body>
 </html>

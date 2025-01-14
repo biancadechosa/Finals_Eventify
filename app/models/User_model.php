@@ -150,8 +150,35 @@ class User_model extends Model {
     {
         $this->db->table('bookings')->where('booking_id', $booking_id)->update(['status' => $status]);
     }
+
+    public function Check_user_role($user_id) {
+        $result = $this->db->table('users')
+                           ->select('role')
+                           ->where('id', $user_id)
+                           ->get();
+
+        if ($result && isset($result['role']) && $result['role'] === 'organizer') {
+            return true;
+        }
+        return false;
+    }
+
+    public function Get_user_by_id($user_id) {
+        // Query to get user data based on user_id
+        $result = $this->db->table('users')
+                           ->select('*')
+                           ->where('id', $user_id)
+                           ->get();
+    
+        // Debugging: Check if data is being returned
+        var_dump($result);  // Check what is being returned by the query
+    
+        return $result;  // Ensure it returns user data (array or object)
+    }
     
 }
+
+
 
 
 ?>
